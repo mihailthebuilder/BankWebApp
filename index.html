@@ -22,8 +22,6 @@
     <button id="deposit">Deposit</button>
     <button id="withdraw">Withdraw</button>
 
-    <button onclick="getContract()">Contract</button>
-
     <!--NOTE: It's more secure to serve the ethers library from your own webserver
         rather than a CDN: 
         https://docs.ethers.io/v5/getting-started/#getting-started--importing--web-browser
@@ -31,8 +29,6 @@
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 
     <script>
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        const signer = provider.getSigner()
 
         async function getAccountBalance() {
             balanceObj = await provider.getBalance("0x04d5Bc320FFa275E77BA576B608798418e83B360")
@@ -41,7 +37,7 @@
         }
 
 
-        function getContract() {
+        function getContract(provider) {
             const address = "0xd5c73a714F3437D890e19D9ECFb2199916a8Bef0";
 
             const abi = [
@@ -91,86 +87,30 @@
                 }
             ];
             
-            const contract = new ethers.Contract(address, abi, provider)
-
-            window.contract = contract
+            return new ethers.Contract(address, abi, provider)
         }
+
+        function load() {
+            provider = new ethers.providers.Web3Provider(window.ethereum)
+            window.provider = provider
+            
+            window.contract = getContract(provider)
+
+            window.signer = provider.getSigner()
+
+            console.log("loaded")
+        }
+
+        load()
 
 
         /*
-        async function loadWeb3() {
-            if (window.ethereum) {
-                window.web3 = new Web3(window.ethereum);
-                window.ethereum.enable();
-            }
-        }
-
-
-        async function loadContract() {
-            const address = "0xd5c73a714F3437D890e19D9ECFb2199916a8Bef0";
-
-            const abi = [
-                {
-                    "inputs": [],
-                    "stateMutability": "nonpayable",
-                    "type": "constructor"
-                },
-                {
-                    "inputs": [
-                        {
-                            "internalType": "int256",
-                            "name": "amt",
-                            "type": "int256"
-                        }
-                    ],
-                    "name": "deposit",
-                    "outputs": [],
-                    "stateMutability": "nonpayable",
-                    "type": "function"
-                },
-                {
-                    "inputs": [],
-                    "name": "getBalance",
-                    "outputs": [
-                        {
-                            "internalType": "int256",
-                            "name": "",
-                            "type": "int256"
-                        }
-                    ],
-                    "stateMutability": "view",
-                    "type": "function"
-                },
-                {
-                    "inputs": [
-                        {
-                            "internalType": "int256",
-                            "name": "amt",
-                            "type": "int256"
-                        }
-                    ],
-                    "name": "withdraw",
-                    "outputs": [],
-                    "stateMutability": "nonpayable",
-                    "type": "function"
-                }
-            ];
-
-            return await new window.web3.eth.Contract(abi, address);
-        }
-
+    
         function updateStatus(status) {
             const statusEl = document.getElementById('status');
             statusEl.innerHTML = status;
             console.log(status);
         }
-
-        async function load() {
-            await loadWeb3();
-            window.contract = await loadContract();
-            updateStatus('Ready!');
-        }
-
         load();*/
 
     </script>
