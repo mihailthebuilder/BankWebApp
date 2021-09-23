@@ -7,17 +7,27 @@
     <title>Document</title>
 </head>
 <body>
-    Status: <span id="status">Loading...</span>
-    <input type="text" id="amount">
     <p>
         Account balance is <span id="accountBalance">...</span>
     </p>
+    <p>
+        <button onclick="getAccountBalance()">Get that balance</button>
+    </p>
+
+
     <p id="balance"></p>
-    <button onclick="getAccountBalance()">Get that balance</button>
-    
+
+    <input type="text" id="amount">
+
     <button id="deposit">Deposit</button>
     <button id="withdraw">Withdraw</button>
+
+    <!--NOTE: It's more secure to serve the ethers library from your own webserver
+        rather than a CDN: 
+        https://docs.ethers.io/v5/getting-started/#getting-started--importing--web-browser
+    -->
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+
     <script>
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const signer = provider.getSigner()
